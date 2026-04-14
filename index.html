@@ -433,8 +433,12 @@ const CAT_COLORS = {
 const CAT_ORDER = ['Breakfast','Lunch','Snack','Dinner'];
 
 // ── DATE HELPERS ──────────────────────────────────────────────────────────────
-function formatDateKey(d) { return d.toISOString().slice(0,10); }
-
+function formatDateKey(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
 function formatDateLabel(d) {
   const today = new Date(); today.setHours(0,0,0,0);
   const yday  = new Date(today); yday.setDate(today.getDate()-1);
@@ -518,33 +522,20 @@ function renderLog() {
     return;
   }
 
-  const grp = {};
-  CAT_ORDER.forEach(c => grp[c] = []);
-  day.forEach(e => { if (!grp[e.category]) grp[e.category] = []; grp[e.category].push(e); });
-
-  let html = '';
-  CAT_ORDER.forEach(cat => {
-    if (!grp[cat] || !grp[cat].length) return;
-    html += `<div class="cat-group">
-      <div class="cat-header">
-        <div class="cat-dot" style="background:${CAT_COLORS[cat]}"></div>
-        <div class="cat-name">${cat}</div>
-      </div>`;
-    grp[cat].forEach(e => {
-      html += `<div class="entry" data-id="${e.id}"
+    let html = '';
+    day.forEach(e => {
+    html += `<div class="entry" data-id="${e.id}"
         style="--cat-color:${CAT_COLORS[e.category]||CAT_COLORS.Snack}"
         onclick="tapEntry(this)">
         <div class="entry-time">${formatTime(e.date)}</div>
         <div class="entry-note">${esc(e.note)}</div>
         <div class="entry-actions">
-          <button class="action-btn edit" onclick="editEntry(event,'${e.id}')">edit</button>
-          <button class="action-btn del"  onclick="promptDelete(event,'${e.id}')">del</button>
+        <button class="action-btn edit" onclick="editEntry(event,'${e.id}')">edit</button>
+        <button class="action-btn del" onclick="promptDelete(event,'${e.id}')">del</button>
         </div>
-      </div>`;
+    </div>`;
     });
-    html += `</div>`;
-  });
-  area.innerHTML = html;
+    area.innerHTML = html;
 }
 
 function esc(s) {
