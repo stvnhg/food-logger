@@ -490,8 +490,8 @@ async function loadLog() {
 function renderLog() {
   const key = formatDateKey(currentDate);
   const day = allEntries
-    .filter(e => e.date && e.date.startsWith(key))
-    .sort((a,b) => a.date.localeCompare(b.date));
+    .filter(e => e.date && formatDateKey(new Date(e.date)) === key)
+    .sort((a,b) => new Date(a.date) - new Date(b.date))
 
   // Summary bar
   const cats = {};
