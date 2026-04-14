@@ -384,6 +384,17 @@
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .toast.success { background: var(--accent); }
   .toast.error { background: var(--danger); }
+
+  .entry-note { min-width: 0; flex: 1; }
+
+.cat-pill-breakfast { background: var(--breakfast-light); border-color: var(--breakfast-border) !important; }
+.cat-pill-breakfast span { color: var(--breakfast-text); }
+.cat-pill-lunch     { background: var(--lunch-light);     border-color: var(--lunch-border) !important; }
+.cat-pill-lunch span     { color: var(--lunch-text); }
+.cat-pill-dinner    { background: var(--dinner-light);    border-color: var(--dinner-border) !important; }
+.cat-pill-dinner span    { color: var(--dinner-text); }
+.cat-pill-snack     { background: var(--snack-light);     border-color: var(--snack-border) !important; }
+.cat-pill-snack span     { color: var(--snack-text); }
 </style>
 </head>
 <body>
@@ -635,9 +646,14 @@ function renderLog() {
   let html = '';
   day.forEach(e => {
     const color = CAT_COLORS[e.category] || 'var(--muted)';
-    html += `<div class="entry" data-id="${e.id}" style="--cat-color:${color}" onclick="tapEntry(this)">
+html += `<div class="entry" data-id="${e.id}" style="--cat-color:${color}" onclick="tapEntry(this)">
       <div class="entry-time">${formatTime(e.date)}</div>
-      <div class="entry-note">${esc(e.note)}</div>
+      <div class="entry-note" style="min-width:0;flex:1;">
+        <span>${esc(e.note)}</span>
+        <span class="cat-pill cat-pill-${(e.category||'snack').toLowerCase()}" style="display:inline-flex;align-items:center;gap:4px;border-radius:20px;padding:2px 7px;margin-left:6px;vertical-align:middle;border:1.5px solid;">
+          <span style="font-size:10px;font-weight:600;">${e.category||'Snack'}</span>
+        </span>
+      </div>
       <div class="entry-actions">
         <button class="action-btn edit" onclick="editEntry(event,'${e.id}')">edit</button>
         <button class="action-btn del"  onclick="promptDelete(event,'${e.id}')">del</button>
